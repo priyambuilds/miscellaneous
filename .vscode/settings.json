@@ -1,0 +1,55 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "eslint.validate": [
+    "javascript",
+    "typescript",
+    "javascriptreact",
+    "typescriptreact"
+  ],
+  "tailwindCSS.includeLanguages": {
+    "typescript": "javascript",
+    "typescriptreact": "HTML",
+    "javascript": "javascript",
+    "javascriptreact": "html"
+  },
+  "tailwindCSS.classAttributes": [
+    "class",
+    "className",
+    "class:list",
+    "classList",
+    "ngClass"
+  ],
+  "tailwindCSS.hover": true,
+  "tailwindCSS.workspaceSymbols": true,
+  "tailwindCSS.experimental.classRegex": [
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+  ],
+  "tailwindcss-highlight.languages": [
+    "html",
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "tailwindcss-highlight.enabledUtilities": [
+    "padding",
+    "margin",
+    "space",
+    "width",
+    "height",
+    "flex",
+    "grid",
+    "position"
+  ],
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "editor.quickSuggestions": {
+    "strings": "on"
+  }
+}

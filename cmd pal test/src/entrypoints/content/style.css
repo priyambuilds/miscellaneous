@@ -1,0 +1,62 @@
+@import 'tailwindcss';
+:host {
+  all: initial;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999999;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 100px;
+}
+
+.palette {
+  width: 600px;
+  max-width: 90vw;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 16px 70px rgba(0, 0, 0, 0.3);
+}
+
+[cmdk-root] {
+  width: 100%;
+}
+
+[cmdk-input] {
+  width: 100%;
+  padding: 16px;
+  font-size: 15px;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #eee;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+[cmdk-list] {
+  max-height: 400px;
+  overflow: auto;
+  padding: 8px;
+}
+
+[cmdk-item] {
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+[cmdk-item][aria-selected='true'] {
+  background: #f0f0f0;
+}
+
+[cmdk-empty] {
+  padding: 32px;
+  text-align: center;
+  color: #999;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
