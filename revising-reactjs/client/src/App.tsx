@@ -1,10 +1,10 @@
 import Navbar from "./features/shared/components/Navbar";
+import ThemeProvider from "./features/shared/components/ThemeProvider";
 import { Toaster } from "./features/shared/components/ui/Toaster";
 
 export function App() {
   return (
-    <>
-      <Toaster />
+    <ThemeProvider defaultTheme="dark">
       <div className="flex justify-center gap-8 pb-8">
         <Navbar />
         <div className="min-h-screen w-full max-w-2xl">
@@ -36,6 +36,7 @@ export function App() {
           </div>
         </div>
       </div>
-    </>
+      <Toaster />
+    </ThemeProvider>
   );
 }
