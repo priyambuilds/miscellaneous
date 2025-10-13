@@ -8,7 +8,6 @@ export default defineContentScript({
   cssInjectionMode: 'ui',
 
   async main(ctx) {
-    // Add "await" here! ⬇️
     const ui = await createShadowRootUi(ctx, {
       name: 'command-palette',
       position: 'inline',
