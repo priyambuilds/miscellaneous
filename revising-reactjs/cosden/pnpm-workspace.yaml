@@ -1,7 +1,0 @@
-packages:
-  - client
-  - server
-  - shared
-
-onlyBuiltDependencies:
-  - better-sqlite3

@@ -1,53 +1,48 @@
-import React from 'react'
-import './style.css'
+import { CommandItem } from '@/components/CommandItem'
+import CommandInput from '../../components/CommandInput'
+import { CommandList } from '@/components/CommandList'
+import { Command } from '../../components/Command'
 
 export function App() {
-  const [menuOpen, setMenuOpen] = React.useState<boolean>(false)
-  const menuRef = useRef<HTMLDivElement>(null)
-  const triggerRef = useRef<HTMLElement | null>(null)
-  // Toggle the menu when ⌘K is pressed
-  React.useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent): void {
+  const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
+        e.stopPropagation()
+        setOpen(prev => !prev)
 
-        // Store element that had focus before opening
-        if (!menuOpen) {
-          triggerRef.current = document.activeElement as HTMLElement
+        if (process.env.NODE_ENV === 'development') {
+          console.log('🎹 Command Palette toggled:', !open)
         }
-        setMenuOpen(open => !open)
       }
-      // Close on escape
-      if (e.key === 'Escape' && menuOpen) {
+      // Escape: Close palette when open
+      if (e.key === 'Escape' && open) {
         e.preventDefault()
-        setMenuOpen(false)
+        setOpen(false)
       }
     }
-    document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [menuOpen])
+    window.addEventListener('keydown', handleKeyDown, { capture: true })
 
-  // Move focus to menu when it opens
-  React.useEffect(() => {
-    if (menuOpen && menuRef.current) {
-      // Focus first focusable element or the container
-      const focus = menuRef.current.querySelector<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      )
-
-      if (focus) {
-        focus.focus()
-      } else {
-        menuRef.current.focus()
-      }
-    } else if (!menuOpen && triggerRef.current) {
-      // Return focus when closed
-      triggerRef.current.focus()
-      triggerRef.current = null
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown, { capture: true })
     }
-  }, [menuOpen])
+  }, [open])
 
-  if (!menuOpen) return null
+  return (
+    <div className="p-8">
+      <h1 className="text-2xl mb-4">CMDK Recreation Test</h1>
 
-  return <div></div>
+      <Command>
+        <CommandInput placeholder="Search commands..." />
+        <CommandList>
+          <CommandItem>Navigate to Home</CommandItem>
+          <CommandItem>Go to Settings</CommandItem>
+          <CommandItem>Search Files</CommandItem>
+          <CommandItem>Create New Document</CommandItem>
+        </CommandList>
+      </Command>
+    </div>
+  )
 }

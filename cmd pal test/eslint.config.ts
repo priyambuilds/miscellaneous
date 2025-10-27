@@ -2,6 +2,7 @@ import js from '@eslint/js'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
 import pluginReact from 'eslint-plugin-react'
+import reactHooks from 'eslint-plugin-react-hooks'
 import prettierConfig from 'eslint-config-prettier'
 import pluginBetterTailwindcss from 'eslint-plugin-better-tailwindcss'
 
@@ -31,18 +32,25 @@ export default [
         ecmaVersion: 'latest',
         sourceType: 'module',
         ecmaFeatures: { jsx: true },
-        // If you opt into type-aware linting, uncomment:
-        // project: './tsconfig.json',
-        // projectService: true,
       },
     },
   },
 
   pluginReact.configs.flat.recommended,
 
-  // Apply the Tailwind preset as its own entry (no duplicate "plugins" keys here)
+  // React Hooks + Compiler rules
+  {
+    name: 'react-hooks-and-compiler',
+    plugins: {
+      'react-hooks': reactHooks,
+    },
+    rules: {
+      ...reactHooks.configs.recommended.rules,
+      'react-hooks/react-compiler': 'error', // Compiler-specific rule
+    },
+  },
+
   pluginBetterTailwindcss.configs.recommended,
 
-  // Keep Prettier last
   prettierConfig,
 ]

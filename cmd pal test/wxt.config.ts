@@ -1,5 +1,6 @@
 import { defineConfig } from 'wxt'
 import { resolve } from 'node:path'
+import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   srcDir: 'src',
@@ -35,7 +36,6 @@ export default defineConfig({
         128: 'icon/128.png',
       },
 
-      // Strict MV3 CSP: do NOT add 'unsafe-eval' or any extra script sources.
       ...(manifestVersion === 3 && {
         content_security_policy: {
           extension_pages:
@@ -67,5 +67,12 @@ export default defineConfig({
   vite: () => ({
     css: { postcss: './postcss.config.js' },
     build: { target: 'esnext', minify: 'esbuild' },
+    plugins: [
+      react({
+        babel: {
+          plugins: ['babel-plugin-react-compiler'],
+        },
+      }),
+    ],
   }),
 })
