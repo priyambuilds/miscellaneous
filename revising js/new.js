@@ -61,3 +61,61 @@ const discount = (a) => {
 discount(a);
 
 // Bill payable
+let u = Number(prompt("enter your amount"))
+
+const price = (u) => {
+    let total = 0
+    if (u < 0 || isNaN(u)) {
+        alert("please enter a valid no");
+        return
+    }
+    else if(u<=100) {
+        total = u*4.2
+    }
+    else if(u<=200) {
+        total = (u-100)*6 + 100*4.2
+    }
+    else if(u<=400) {
+        total = (u-200)*6 + 100*4.2 + 200*6
+    }
+    else {
+        total = 100*4.2 + 200*8 + 400*8 + (u-400)*13
+    }
+
+    return `Your total bill is ${total}`
+}
+
+price(u);
+
+// notes
+// Bill payable
+let n = Number(prompt("enter your amount"))
+
+const notes = (u) => {
+    let fiveH = 0
+    let twoH = 0
+    let H = 0
+    let ten = 0
+    let one = 0
+    let two = 0
+    if (u < 0 || isNaN(u)) {
+        alert("please enter a valid no");
+        return
+    }
+    else if(u<=100) {
+        total = u*4.2
+    }
+    else if(u<=200) {
+        total = (u-100)*6 + 100*4.2
+    }
+    else if(u<=400) {
+        total = (u-200)*6 + 100*4.2 + 200*6
+    }
+    else {
+        total = 100*4.2 + 200*8 + 400*8 + (u-400)*13
+    }
+
+    return `Your total bill is ${total}`
+}
+
+price(u);
