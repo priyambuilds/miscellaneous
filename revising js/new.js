@@ -266,3 +266,109 @@ const guessGame = (n) => {
     alert("You won the game")
 }
 guessGame(n)
+
+// Taking no in arr
+let arr = new Array(5)
+for(let i = 0; i<arr.length; i++) {
+    arr[i] = Number(prompt("Enter a no"))
+}
+
+// Reduce
+let arr = [10, 11, 12, 13, 14, 15]
+let sum = 0
+for(let i = 0; i<arr.length; i++) {
+    sum += arr[i]
+}
+console.log(sum)
+
+// Max
+let arr = [10, 20, 45, 1, 49, 21]
+let max = arr[0]
+for(let i = 1; i<arr.length; i++) {
+    if(max<arr[i]) {
+        max = arr[i]
+    }
+}
+console.log(max)
+
+// 2nd max
+let arr = [10, 20, 45, 1, 49, 21]
+let max1 = Math.max(arr[0], arr[1])
+let max2 = Math.min(arr[0], arr[1])
+for(let i = 2; i<arr.length; i++) {
+    if(max1<arr[i]) {
+        max2 = max1
+        max1 = arr[i]
+    }
+    else if (max2<arr[i]) {
+        max2 = arr[i]
+    }
+}
+console.log(`${max1}, ${max2}`)
+
+// reverse array
+let arr = [10, 20, 45, 1, 49, 21]
+let newArr = []
+for(let i = arr.length - 1; i>=0; i--) {
+    newArr.push(arr[i])
+}
+console.log(newArr)
+
+// rev arr 2nd method
+let arr = [10, 20, 45, 1, 49, 21]
+let i = 0, j = arr.length-1
+while(1!=j) {
+    let temp = arr[i]
+    arr[i] = arr[j]
+    arr[j] = temp
+    i++
+    j--
+}
+console.log(arr)
+
+// Left rotation by 1
+let arr = [1, 2, 3, 4, 5, 6]
+let copy = arr[0]
+for(i=0; i<arr.length-1; i++) {
+    arr[i] = arr[i+1]
+}
+arr[arr.length - 1] = copy
+console.log(arr)
+
+// Right rotation by 1
+let arr = [1, 2, 3, 4, 5, 6]
+let copy = arr[arr.length - 1]
+for(i=arr.length-1; i>0;i--) {
+    arr[i] = arr[i-1]
+}
+arr[0] = copy
+console.log(arr)
+
+// Left and right rotation by k element
+// Left rotation
+let arr = [1, 2, 3, 4, 5, 6]
+let k = Number(prompt("Enter a no"))
+k = k%arr.length
+for(j=0; j<k;j++) {
+    let copy = arr[0]
+    for(let i =0; i<arr.length-1; i++) {
+        arr[i] = arr[i+1]
+    }
+    arr[arr.length-1] = copy
+}
+console.log(arr)
+
+// Right rortation
+let arr = [1, 2, 3, 4, 5, 6]
+let k = Number(prompt("Enter a no"))
+k = k%arr.length
+for(j=0; j<k;j++) {
+    let copy = arr[arr.length-1]
+    for(let i=arr.length-1; i>0; i--) {
+        arr[i] = arr[i-1]
+    }
+    arr[0] = copy
+}
+console.log(arr)
+
+// This method is not effecient
