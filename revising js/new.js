@@ -371,4 +371,606 @@ for(j=0; j<k;j++) {
 }
 console.log(arr)
 
-// This method is not effecient
+// Objects
+// Object initialization
+let fruit = "apple"
+
+let bag = {
+    store: "fruit", // Literal key
+    [fruit]: 5 // Computed key {dynamic}
+}
+
+// Dot notation
+let bag = {}
+bag.quantity = 6
+
+// Bracket notation (post creationp)
+let bat = {}
+let dynamicFruit = "banana"
+
+bag[dynamicFruit] = 10
+bag["organic apple"] = 3
+
+// Object assign or spread
+let bag = []
+Object.assign(bag, {orange: 8, grape: 12}) // used when we want to merge multiple properties or object together at once
+let updatedBag = {...bag, mango:2} // creates a brand new object combining the old and new values
+alert("age" in user) // true, property "age" exists
+
+// for in loop
+let user = {
+  name: "John",
+  age: 30,
+  isAdmin: true
+};
+for(let key in user) {
+    // key
+    alert(key)
+    // values
+    alert(user[key])
+}
+
+let user = {
+    name: "John",
+    surname: "Smith",
+}
+user.name = "Pete"
+delete user.name
+console.log(user)
+
+const isEmpty = (obj) => {
+    for(let key in obj) {
+        return false
+    }
+    return true
+}
+
+let salaries = {
+  John: 100,
+  Ann: 160,
+  Pete: 130
+};
+
+let sum = 0
+for(let key in salaries) {
+    sum += salaries[key]
+}
+alert(sum)
+
+let obj = {
+  width: 200,
+  height: 300,
+  title: "My menu"
+};
+const multiplyNumeric = (obj) => {
+    for(let key in obj) {
+        if(typeof obj[key] == 'number') {
+            obj[key] *= 2
+        }
+    }
+}
+multiplyNumeric(obj)
+console.log(obj)
+
+// Cloning an object
+let user = {
+  name: "John",
+  age: 30
+};
+
+let clone = {}
+
+for(let key in user) {
+    clone[key] = user[key]
+}
+
+const clone = {...user}
+
+// Object.assign
+// It can be used for shallow cloning but failts for deep cloning
+const obj1 = { a: 0, b: { c: 0 } };
+const obj2 = Object.assign({}, obj1);
+console.log(obj2); // { a: 0, b: { c: 0 } }
+
+obj1.a = 1;
+console.log(obj1); // { a: 1, b: { c: 0 } }
+console.log(obj2); // { a: 0, b: { c: 0 } }
+
+obj2.a = 2;
+console.log(obj1); // { a: 1, b: { c: 0 } }
+console.log(obj2); // { a: 2, b: { c: 0 } }
+
+obj2.b.c = 3;
+console.log(obj1); // { a: 1, b: { c: 3 } }
+console.log(obj2); // { a: 2, b: { c: 3 } }
+
+// It can be used to merge objects
+const o1 = { a: 1 };
+const o2 = { b: 2 };
+const o3 = { c: 3 };
+const obj = Object.assign({}, o1, o2, o3)
+console.log(obj) // { a: 1, b: 2, c: 3 }
+
+// Recursive deep clone
+const deepClone = (item) => {
+
+}
+
+// Deep clone
+let user = {
+  name: "John",
+  sizes: {
+    height: 182,
+    width: 50
+  }
+};
+
+const deepClone = (item) => {
+    if(typeof item !== 'object' || item === null) {
+        return item;
+    }
+    const copy = Array.isArray(item) ? [] : {}; 
+    
+    for(let key in item) { 
+        copy[key] = deepClone(item[key]);
+    }
+    
+    return copy;
+}
+const perfectClone = deepClone(user);
+
+console.log(perfectClone);
+
+let clone = structuredClone(user)
+alert(user === clone) // This will return false. Because these 2 objects point to entirely different memory locations now.
+
+// Method is simply a function that has been assigned as a property to an object
+const user = {
+    name: "Priyam",
+    age: 23,
+    login: function () {
+        console.log("Login")
+    }
+}
+user.login()
+
+const user = {
+    name: "Priyam",
+    age: 23,
+    login () {
+        console.log("Login")
+    }
+}
+user.login()
+
+let user = {
+  name: "John",
+  age: 30
+};
+
+user.sayHi = function() {
+  alert("Hello!");
+};
+
+user.sayHi(); // Hello!
+
+// this
+// We use this because its dynamic.
+// this is simply not connected to an object but a property of every object
+// therefore even if we copy the object the methods will still work
+// this is evaluated during the runtime, depending on the context
+const user = {
+    name: "Priyam",
+    age: 23,
+    login () {
+        alert(this.name)
+    }
+}
+user.login()
+
+function makeUser () {
+    return {
+        name: "pritam",
+        ref: this
+    }
+}
+let user = makeUser()
+alert(user.ref.name)
+
+// calculator
+let calculator = {
+    read() {
+        this.a = Number(prompt("enter two nos"))
+        this.b = Number(prompt("enter two nos"))
+    },
+    sum() {
+        return this.a+this.b
+    },
+    mul() {
+        return this.a*this.b
+    }
+}
+
+calculator.read();
+alert( calculator.sum() );
+alert( calculator.mul() );
+
+let ladder = {
+  step: 0,
+  up() {
+    this.step++;
+    return this;
+  },
+  down() {
+    this.step--;
+    return this;
+  },
+  showStep: function() { // shows the current step
+    alert( this.step );
+    return this;
+  }
+};
+ladder.up().up().down().showStep().down().showStep();
+console.log(ladder)
+
+// Constructor
+function User(name, age) {
+    this.name = name 
+    this.age = age 
+    this.isAdmin = false
+
+    this.login = function() {
+        console.log(this.name + " logged in.")
+    }
+}
+
+let user1 = new User("Priyam", 18)
+let user2 = new User("Alice", 25)
+
+user1.login()
+user2.login()
+
+function User(name, age) {
+    this.name = name 
+    this.age = age
+    this.isAdmin = true
+    this.login = function() {
+        alert("logged in")
+    }
+}
+user1 = new User("oriyam", 12)
+user2 = new User("oriya2m", 11)
+user1.login()
+user2.login()
+
+let sharedMemory = {}
+function A() {
+    return sharedMemory
+}
+function B() {
+    return sharedMemory
+}
+
+let a = new A();
+let b = new B();
+
+alert( a == b ); // true
+
+
+// Calculator
+function Calculator() {
+    this.read = function() {
+        this.a = Number(prompt("Enter 1st no"))
+        this.b = Number(prompt("Enter 1st no"))
+    }
+    this.sum = function() {
+        return this.a+this.b
+    }
+    this.mul = function() {
+        return this.a*this.b
+    }
+}
+
+let calculator = new Calculator();
+calculator.read();
+
+alert( "Sum=" + calculator.sum() );
+alert( "Mul=" + calculator.mul() );
+
+// Accumulator
+function Accumulator(val) {
+    this.value = val
+    this.read = function() {
+        this.value += Number(prompt("Enter 1st no"))
+    }
+}
+
+let accumulator = new Accumulator(1); // initial value 1
+
+accumulator.read(); // adds the user-entered value
+accumulator.read(); // adds the user-entered value
+
+alert(accumulator.value); // shows the sum of these values
+
+// Nullish operator
+let userScore = 0
+let score1 = userScore || 10
+let score2 = userScore ?? 10
+console.log(score1)
+console.log(score2)
+
+// even nos
+let arr = []
+for(let i = 0; i<=10; i++) {
+    if(i%2==0) arr.push(i)
+}
+console.log(arr)
+
+// repeat untill correct
+let input = Number(prompt("enter a no"))
+while(input <= 100) {
+    input = prompt("Please enter a no greater than 100")
+}
+
+// prime nos
+let n = Number(prompt("enter a no"))
+let arr = []
+for(let i = 2; i<n; i++){
+    let isPrime = true
+    for(j=2; j<=Math.sqrt(i); j++) {
+        if (i%j == 0) {
+            isPrime = false
+            break
+        }
+    }
+    if (isPrime) {
+        arr.push(i)
+    }
+}
+console.log(arr)
+
+const num = Number(prompt("enter a no"))
+const Binary = (n) => {
+    if(n === 0) return "0"
+    let binary = ""
+    while(n > 0) {
+        binary = n%2 + binary
+        n = Math.floor(n/2)
+    }
+    return binary
+}
+console.log((Binary(num)))
+
+const ran = (min,max) => {
+    Math.random() * (max-min) + min
+}
+
+let str = "hello"
+alert(str[0])
+alert(str.at(0))
+alert(str[str.length - 1])
+alert(str.at(-1))
+
+function Triangle(base, height) {
+    this.base = base
+    this.height = height
+    this.area = function() {
+        return 1/2 * this.base * this.height
+    }
+
+}
+const t = new Triangle(10, 5);
+console.log("Triangle area:", t.area());  //OP: Triangle area: 25
+
+function Rectangle (l, b) {
+    this.l = l
+    this.b = b 
+    this.isSquare = function () {
+        return this.l === this.b
+    }
+    this.perimeter = function () {
+        return 2*(this.l+this.b)
+    }
+}
+
+const r1 = new Rectangle(5, 5);
+console.log("Is square?", r1.isSquare()); //OP: Is square? true
+
+function Circle (r) {
+    this.r = r
+    this.diameter = function () {
+        return this.r*2
+    }
+    this.perimeter = function () {
+        return 2*(this.l+this.b)
+    }
+}
+const c = new Circle(7);
+console.log("Circle diameter:", c.diameter());  //OP: Circle diameter: 14
+
+
+console.log("Rectangle perimeter:", new Rectangle(4, 6).perimeter());
+console.log("Circle perimeter:", new Circle(5).perimeter());
+
+function Rectangle (l, b) {
+    this.l = l
+    this.b = b 
+    this.isSquare = function () {
+        return this.l === this.b
+    }
+    this.perimeter = function () {
+        return 2*(this.l+this.b)
+    }
+    this.hasSameArea = function (r2) {
+        const r1area = this.l * this.b
+        const r2area = r2.l * r2.b
+        return r1area === r2area
+    }
+}
+const r1 = new Rectangle(4, 5);
+const r2 = new Rectangle(10, 2);
+console.log("Same area?", r1.hasSameArea(r2)); //Same area? true
+
+const ucFirst = (str) => {
+    if (!str) return str
+    return str[0].toUpperCase() + str.slice(1)
+}
+ucFirst("john") == "John";
+
+const checkSpam = (str) => {
+    return str.toLowerCase().includes("viagra") || str.toLowerCase().includes("xxx");
+}
+checkSpam('buy ViAgRA now') == true
+checkSpam('free xxxxx') == true
+checkSpam("innocent rabbit") == false
+
+const truncate = (str, maxlength) => {
+    return str.length > maxlength
+    ? str.slice(0, maxlength - 1) + "…"
+    :str
+}
+truncate("What I'd like to tell on this topic is:", 20) == "What I'd like to te…"
+truncate("Hi everyone!", 20) == "Hi everyone!"
+
+const extractCurrencyValue = (str) => {
+    return +str.slice(1)
+}
+alert( extractCurrencyValue('$120') === 120 ); // true
+
+// Array operations
+let styles = ["Jass", "Blues"]
+styles.push("Rock-n-Roll")
+let mid = Math.floor(styles.length / 2)
+styles[mid] = "Classics"
+alert(styles.shift())
+styles.unshift("Rap", "a")
+
+const sumInput = () => {
+    let arr = []
+    let sum = 0
+    while(true) {
+        let input = prompt("enter a no")
+        if(input === null || input === '' || !isFinite(input)) {
+            break
+        }
+        arr.push(+input)
+    }
+    for(i of arr) {
+        sum += i
+    }
+    return sum
+}
+console.log(sumInput())
+
+// map
+const arr = [1, 2, 3, 4]
+const mapped = Array.map((x) => x*2)
+
+// dash to camel
+const camelize = (str) => {
+    return str.split("-").map((word, index) => {
+        return index === 0 ? word : word[0].toUpperCase() + word.slice(1)
+    }).join('')
+}
+camelize("background-color") == 'backgroundColor';
+camelize("list-style-image") == 'listStyleImage';
+camelize("-webkit-transition") == 'WebkitTransition';
+
+// Filter range
+const filterRange = (arr, a, b) => {
+    let newArr = []
+    for(i of arr) {
+        if(i>=a && i<=b) newArr.push(i)
+    }
+    return newArr
+}
+
+const filterRange = (arr, a, b) => {
+    return arr.filter(i => (a <= i && i<=b))
+}
+
+let arr = [5, 3, 8, 1];
+let filtered = filterRange(arr, 1, 4);
+alert( filtered ); // 3,1 (matching values)
+alert( arr ); // 5,3,8,1 (not modified)
+
+// filter range in place
+const filterRangeInPlace = (arr, a, b) => {
+    for(let i = arr.length-1; i>=0; i--) {
+        if(a>arr[i] || arr[i]>b) {
+            arr.splice(i, 1)
+        }
+    }
+}
+let arr = [5, 3, 8, 1];
+filterRangeInPlace(arr, 1, 4); // removed the numbers except from 1 to 4
+alert( arr ); // [3, 1]
+
+let arr = [5, 2, 1, -10, 8];
+const sortDec = (arr) => {
+    
+}
+alert( arr ); // 8, 5, 2, 1, -10
+
+function x() {
+    var a = 7
+    function y() {
+        console.log(a)
+    }
+    return y
+}
+
+
+let obj = { 
+    food: [10, 20, 30], 
+    travel: [5, 15], 
+    bills: [40, 60] 
+}
+const sumObj = (obj) => {
+    for(key in obj) {
+        obj[key] = obj[key].reduce((accumulator, currentval) => {
+            return accumulator + currentval
+        }, 0)
+    }
+    return obj
+}
+sumObj(obj)
+
+let arr = ["apple", "banana", "apple", "orange", "banana", "apple"]
+const wordOcc = (arr) => {
+    let count = arr.reduce((acc, item) => {
+        if(acc[item] === undefined) {
+            acc[item] = 1
+        } else {
+            acc[item] += 1
+        }
+        return acc
+    }, {})
+    return count
+}
+console.log(wordOcc(arr))
+
+let obj = { a: "x", b: "y", c: "z" }
+const swapKV = (obj) => {
+    let newobj = {}
+    for(key in obj) {
+        newobj[obj[key]] = key
+    }
+    return newobj
+}
+console.log(swapKV(obj))
+
+let obj = { a: 10, b: 50, c: 20 }
+const largestVal = (obj) => {
+    let arr = Object.values(obj)
+    let numArr = []
+    for(let i = 0; i<arr.length-1; i++) {
+        if(i%2 === 1) {
+            numArr.push(i)
+        }
+    }
+    console.log(arr)
+    console.log(numArr)
+    return Math.max(...numArr)
+}
+console.log(largestVal(obj))
