@@ -974,3 +974,14 @@ const largestVal = (obj) => {
     return Math.max(...numArr)
 }
 console.log(largestVal(obj))
+
+let obj = ["apple", "banana", "apple", "orange", "banana", "apple"]
+const occr = (obj) => {
+    let newObj = obj.reduce((item, acc) => {
+        if(acc[item] === undefined) {
+            acc[item] = 1
+        } else {
+            acc[item] +=1
+        }
+    })
+}

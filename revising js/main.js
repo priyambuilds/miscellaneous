@@ -904,3 +904,10 @@ console.log(arr9filtered)
 
 // clone array
 
+let obj = ["apple", "banana", "apple", "orange", "banana", "apple"]
+const occr = (obj) => {
+    let newObj = {}
+    obj.reduce((item, acc) => {
+        
+    })
+}
