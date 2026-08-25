@@ -985,3 +985,27 @@ const occr = (obj) => {
         }
     })
 }
+
+let obj = { food: [10, 20, 30], travel: [5, 15], bills: [40, 60] };
+const sumVal = (obj) => {
+    for (key in obj) {
+        obj[key] = obj[key].reduce((acc, item) => {
+            return acc + item
+        }, 0)
+    }
+    return obj
+}
+sumVal(obj)
+
+const arr = ["apple", "banana", "apple", "orange", "banana", "apple"]
+
+Array.prototype.myReduce = function (callback, initialValue) {
+    const array = this;
+    let accumulator = initialValue
+    let startingIndex = 0;
+
+    if (initialValue === undefined) {
+        accumulator = array[0]
+        startingIndex = 1
+    }
+}
