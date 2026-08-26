@@ -999,13 +999,41 @@ sumVal(obj)
 
 const arr = ["apple", "banana", "apple", "orange", "banana", "apple"]
 
-Array.prototype.myReduce = function (callback, initialValue) {
-    const array = this;
-    let accumulator = initialValue
-    let startingIndex = 0;
-
-    if (initialValue === undefined) {
-        accumulator = array[0]
-        startingIndex = 1
+const wordCount = arr.reduce((acc, word) => {
+    if (acc[word] === undefined) {
+        acc[word] = 1;
     }
+    else {
+        acc[word]++
+    }
+    return acc;
+}, {})
+
+console.log(wordCount)
+
+const obj = { a: "x", b: "y", c: "z" }
+const swapObj = (obj) => { 
+    let temp = {}
+    for (item in obj) {
+        const value = obj[item]
+        temp[value] = item
+    }
+    return temp
 }
+console.log(swapObj(obj))
+
+const obj = { a: 10, b: 50, c: 20 }
+const getLargest = (obj) => {
+    let maxKey = null;
+    let maxValue = -Infinity
+
+    for (item in obj) {
+        const currentVal = obj[item]
+        if (currentVal > maxValue) {
+            maxValue = currentVal
+            maxKey = item
+        }
+    }
+    return maxKey
+}
+console.log(getLargest(obj))
