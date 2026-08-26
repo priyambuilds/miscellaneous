@@ -1116,3 +1116,72 @@ console.log(fastUnique)
 
 let obj = { name: "Rahul", age: 23, city: "Noida" }, ["name","city"]
 
+function myCustomFilter(array, callbackLogic) {
+    const result = []
+
+    for (let i = 0; i < array.length; i++) {
+        if (callbackLogic(array[i])) {
+            result.push(array[i])
+        }
+    }
+    return result
+}
+const numbers = [1, 2, 3, 4, 5, 6];
+const evens = myCustomFilter(numbers, (num) => {num%2 ==0})
+
+
+function Player(name, hp) {
+    this.name = name;
+    this.hp = hp;
+}
+
+Player.prototype.takeDamage = function (damage) {
+    this.hp -= damage;
+    console.log(`${this.name} took ${damage} dmg. HP: ${this.hp}`);
+};
+
+const p1 = new Player("John", 100)
+p1.takeDamage(20);
+
+class Player {
+    constructor(name, hp) {
+        this.name = name
+        this.hp = hp
+    }
+
+    takeDamage(damage) {
+        this.hp -= damage
+        console.log(`${this.name} took ${damage} dmg. HP: ${this.hp}`);
+    }
+}
+const p1 = new Player("John", 100);
+p1.takeDamage(20);
+
+class myPromise {
+    constructor(executor) {
+        this.state = "pending";
+        this.value = undefined;
+
+        this.onResolveCallbacks = [];
+
+        const resolve = (value) => {
+            if (this.state === "pending") {
+                this.state = "fulfilled";
+                this.value = value;
+
+                this.onResolveCallbacks.forEach((callback) => callback(this.value));
+            }
+        };
+        executor(resolve)
+    }
+    then(onFulfilled) {
+        if (this.state === "fulfilled") {
+            onFulfilled(this.value);
+        } else if (this.state === "pending") {
+            this.onResolveCallbacks.push(onFulfilled)
+        }
+    }
+}
+
+// A promise in JS is an object of class Promise. It represents the eventual result of an async operation.
+// Creating a promise
