@@ -1037,3 +1037,82 @@ const getLargest = (obj) => {
     return maxKey
 }
 console.log(getLargest(obj))
+
+const obj = { fruits: ["apple", "banana"], veggies: ["carrot", "pea"] }
+const flatten = (obj) => {
+    const arr = []
+    for (const item in obj) {
+        arr.push(...obj[item])
+    }
+    return arr
+}
+console.log(flatten(obj))
+
+const obj = [
+  { name: "A", city: "Delhi" },
+  { name: "B", city: "Mumbai" },
+  { name: "C", city: "Delhi" }
+]
+const group = (arr) => {
+    let output = {}
+    for (const item of arr) { 
+        if (!output[item.city]) {
+            output[item.city] = []
+        }
+
+        output[item.city].push(item.name)
+    }
+    return output
+}
+console.log(group(obj))
+
+const obj = { a: 20, b: 60, c: 40, d: 90 }
+
+const filterVal = (obj) => {
+    const temp = {}
+    for (item in obj) {
+        if (obj[item] > 50) {
+            const currentVal = item
+            temp[item] = obj[item]
+        }
+    }
+    return temp
+}
+filterVal(obj)
+
+const obj = { A: [80, 90], B: [70, 75, 85] }
+
+const highest = (obj) => {
+    let highestKey = null;
+    let highestVal = -Infinity;
+    for (const item in obj) {
+        obj[item] = obj[item].reduce((acc, key) => {
+            return acc + key / obj[item].length
+        }, 0)
+        if (obj[item] > highestVal) {
+            highestVal = obj[item]
+            highestKey = item
+        }
+    }
+    return highestKey
+}
+
+console.log(highest(obj))
+
+
+const unique = (obj) => {
+    let arr = []
+    for (item in obj) {
+        arr.push(...obj[item])
+    }
+    return [...new Set(arr)]
+}
+
+console.log(unique(obj))
+
+const obj = { x: [1,2,3], y: [2,3,4], z: [4,5] }
+const fastUnique = [...new Set(Object.values(obj).flat())]
+console.log(fastUnique)
+
+let obj = { name: "Rahul", age: 23, city: "Noida" }, ["name","city"]
+
