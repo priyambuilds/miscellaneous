@@ -1204,3 +1204,27 @@ function fsReadFilePromise(fileName, encoding) {
 fsReadFilePromise("a.txt", "utf-8")
     .then(function(data) {console.log(data)})
     .catch(function(e) {console.log("Error while reading file")})
+
+function setTimeoutPromisified(delay) {
+    return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+            resolve()
+        }, delay)
+    })
+}
+
+setTimeoutPromisified(1000)
+    .then(function () {
+        console.log("one second has passed")
+    })
+    .catch(function () {
+        console.log("an error came")
+    })
+    .finally(function () {
+        console.log("finally after either then or catch ran")
+    })
+
+// or we can use the async await syntax
+async function main() {
+    
+}
