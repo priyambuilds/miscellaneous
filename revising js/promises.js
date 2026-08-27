@@ -92,3 +92,22 @@ wait(1000)
     }) 
 
 
+function flipCoin() {
+    return new Promise((resolve, reject) => 
+        setTimeout(() => {
+            let num = Math.random()
+            num > 0.5 ? resolve("Heads") : reject("Tails")
+        }, 500)
+
+    )
+}
+
+const playCoinToss = async () => {
+    try {
+        const result = await flipCoin();
+        console.log("Success:", result)
+    } catch (err) {
+        console.log("Failed:", err)
+    }
+}
+playCoinToss();
