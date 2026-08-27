@@ -1225,6 +1225,19 @@ setTimeoutPromisified(1000)
     })
 
 // or we can use the async await syntax
-async function main() {
-    
+// Wrapping callbacks
+
+function wait(ms) {
+    return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+            resolve()
+        }, ms)
+    })
 }
+
+wait(1000)
+    .then(function () {
+        console.log("")
+    })
+
+
