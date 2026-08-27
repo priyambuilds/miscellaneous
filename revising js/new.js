@@ -1185,3 +1185,22 @@ class myPromise {
 
 // A promise in JS is an object of class Promise. It represents the eventual result of an async operation.
 // Creating a promise
+// Create a pomisified version of fs.readFile
+// Create a pomisified version of setTimeout
+// Create a pomisified version of fs.writeFile
+
+// this is how it would be implemented but not how its written
+function fsReadFilePromise(fileName, encoding) {
+    return new Promise(function (resolve, reject) {
+        fs.readFile(fileName, encoding, function (err, data) {
+            if (err) {
+                reject("error while reading file")
+            } else {
+                resolve (data)
+            }
+        })
+    });
+}
+fsReadFilePromise("a.txt", "utf-8")
+    .then(function(data) {console.log(data)})
+    .catch(function(e) {console.log("Error while reading file")})
