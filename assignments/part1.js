@@ -68,10 +68,24 @@ const byMember = (obj, name) => {
 }
 
 const search = (obj, name) => {
-    const result =  obj.filter(({ desc }) =>
+    return obj.filter(({ desc }) =>
         desc.toLowerCase().includes(name.toLowerCase())
     )
-    return result.map(item => item.desc).join()
+    .map(item => item.desc).join()
 }
 search(expenses, "wi")
 
+const filterExpenses = (obj, {member, search}) => {
+    return obj.filter(({ paidBy, participants, desc }) => {
+        const members = participants.includes(member) || !member || paidBy == member
+        const item = desc.toLowerCase().includes(search.toLowerCase()) || !search
+        return members && item
+    })
+    .map(n => n.desc)
+}
+
+console.log(filterExpenses(expenses, { member: null, search: "" }))
+
+const summary = (obj) => {
+    
+}
