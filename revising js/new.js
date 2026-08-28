@@ -1239,3 +1239,11 @@ wait(1000)
     .then(function () {
         console.log("")
     })
+
+
+let arr = [{ type: "fruit", name: "apple" }, { type: "meat", name: "beef" }]
+let out = arr.reduce((acc, { type, name }) => {
+    (acc[type] ??=[]).push(name)
+    return acc
+}, {})
+console.log(out)

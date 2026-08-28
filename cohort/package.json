@@ -12,6 +12,7 @@
   "type": "module",
   "dependencies": {
     "chalk": "^6.0.0",
-    "commander": "^15.0.0"
+    "commander": "^15.0.0",
+    "express": "^5.2.1"
   }
 }
