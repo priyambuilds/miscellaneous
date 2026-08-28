@@ -1239,5 +1239,3 @@ wait(1000)
     .then(function () {
         console.log("")
     })
-
-
