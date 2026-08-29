@@ -14,6 +14,7 @@ const totalPaid = (expenses, members) => {
     }, initialBalances)
     return total
 }
+console.log(totalPaid(expenses, members))
 
 const splitEvenly = (total, n) => {
     let newTotal = Math.round(total*100)
@@ -22,6 +23,8 @@ const splitEvenly = (total, n) => {
     let arr = new Array(n).fill(base).map((num, i) => (i < cents ? num + 1 : num)/100)
     return arr
 }
+
+console.log(splitEvenly(100, 3))
 
 const totalOwed = (expenses, members) => {
     let totalBal = Object.fromEntries(members.map(n => [n, 0]))
@@ -34,6 +37,7 @@ const totalOwed = (expenses, members) => {
     }, totalBal)
     return totalExp
 }
+console.log(totalOwed(expenses, members))
 
 const balances = (paid, owed) => {
     let netBal = Object.fromEntries(
@@ -43,11 +47,13 @@ const balances = (paid, owed) => {
     )
     return netBal
 }
+console.log(balances(totalPaid(expenses, members), totalOwed(expenses, members)))
 
 const verify = (obj) => {
     const sum = Object.values(obj).reduce((acc, item) => acc + item, 0)
     return Math.abs(sum) < 0.01;
 }
+console.log(balances(totalPaid(expenses, members), totalOwed(expenses, members)))
 
 // If 2 members are tied at the top, it will return the array of those 2 member's names
 const biggestSpender = (obj) => {
@@ -59,6 +65,7 @@ const biggestSpender = (obj) => {
         return result[0]
     } else return result
 }
+console.log(biggestSpender(totalPaid(expenses, members)))
 
 const byMember = (obj, name) => {
     return obj.filter(({ paidBy, participants }) => {
@@ -66,6 +73,7 @@ const byMember = (obj, name) => {
     })
     .map(({desc}) => desc)
 }
+console.log(byMember(expenses, "kabir"));
 
 const search = (obj, name) => {
     return obj.filter(({ desc }) =>
@@ -83,9 +91,15 @@ const filterExpenses = (obj, {member, search}) => {
     })
     .map(n => n.desc)
 }
-
 console.log(filterExpenses(expenses, { member: null, search: "" }))
 
-const summary = (obj) => {
-    
+const summary = () => {
+    let total = Object.values(totalPaid(expenses, members))
+    let count = total.length
+    total = total.reduce((acc, item) => acc + item, 0)
+    let average = total/count
+    let biggest = biggestSpender(totalPaid(expenses, members))
+    return {total, count, average, biggest}
 }
+console.log(summary())
+
