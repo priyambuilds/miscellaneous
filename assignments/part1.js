@@ -103,3 +103,32 @@ const summary = () => {
 }
 console.log(summary())
 
+const a = { x: 1 };
+const b = a;
+b.x = 2;
+console.log(a.x); // 2. Because b.x still points to the same reference in the memory where a.x is stored. For objects we cant create a true copy with just an = assignmemt operator.
+
+const c = { x: 1, nested: { y: 1 } };
+const d = { ...c };
+d.x = 99;
+d.nested.y = 99;
+console.log(c.x);            // 1. ... spread operator create a shallow copy of the original object. Meaning d.x does not point to the same reference in the memory as c.x and both are independent of each other
+console.log(c.nested.y);     // 99 ... created a shallow copy. But it's still not a true copy. It works only for the top level stuff defined inside the object.
+
+const list = [1, 2, 3];
+const copy = list;
+copy.push(4);
+console.log(list.length);    // 4 arrays are basically a special type of object. Therefore they follow the same rules as an object
+
+const todos = [{ id: 1, done: false }, { id: 2, done: false }];
+const toggleDone = (todo, id) => {
+    return todo.map(item => {
+        if (id === item.id) {
+            return {...item, done: !item.done}
+        }
+        return item
+    })
+}
+const next = toggleDone(todos, 2)
+console.log(next[0] === todos[0])
+console.log(next[1] === todos[1])
