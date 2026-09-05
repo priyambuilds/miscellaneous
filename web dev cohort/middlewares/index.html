@@ -1,0 +1,54 @@
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    </head>
+    <body>
+        <div style="display: flex"></div>
+        <div>
+            Loading...
+        </div>
+        <div>
+            <!-- Added id="userNote" to link with your JS -->
+            <input type="text" id="userNote">
+            <button onClick="addTodo()">Create a new note</button>
+        </div>
+        <!-- Added missing container for notes -->
+        <div id="notes"></div>
+        
+        <script>
+            async function addTodo() {
+                const noteInput = document.getElementById("userNote");
+                const noteValue = noteInput.value;
+
+                // Changed payload key from 'notes' to 'note' to match backend
+                await axios.post("http://localhost:3000/notes", {
+                    note: noteValue
+                });
+
+                // Fixed variable name thrashing and element creation
+                const newNote = document.createElement("div"); 
+                newNote.innerHTML = noteValue;
+                newNote.setAttribute("style", "border: 2px solid black; padding: 10px;");
+                document.getElementById("notes").appendChild(newNote);
+                
+                noteInput.value = "";
+            }
+
+            async function getTodos() {
+                const response = await axios.get("http://localhost:3000/notes");
+                const notesData = response.data.notes;
+                const notesContainer = document.getElementById("notes");
+                notesContainer.innerHTML = "";
+                
+                // Fixed loop condition to check array length
+                for(let i = 0; i < notesData.length; i++) {
+                    const noteElement = document.createElement("div");
+                    noteElement.innerHTML = notesData[i];
+                    noteElement.setAttribute("style", "border: 2px solid black; padding: 10px;");
+                    notesContainer.appendChild(noteElement);
+                }
+            }
+            getTodos();
+        </script>
+    </body>
+</html>
