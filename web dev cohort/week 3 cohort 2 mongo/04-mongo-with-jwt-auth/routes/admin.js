@@ -24,7 +24,7 @@ router.post('/signup', async (req, res) => {
         })
     } else {
         res.status(411).json({
-            message: "incorrect email pass"
+            message: "incorrect email"
         })
     }
 
