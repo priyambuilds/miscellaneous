@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken");
 
-function authMiddleware(req, res, next) {
-    const token = req.headers.token; // jwt
+function authMiddleWare(req, res, next) {
+    const token = req.headers.token;
 
-    const decoded = jwt.verify(token, "attlasiationsupersecret123123password");
+    const decoded = jwt.verify(token, "ultrasupersecretpassword123");
     const userId = decoded.userId;
     if (userId) {
         req.userId = userId;
@@ -16,5 +16,5 @@ function authMiddleware(req, res, next) {
 }
 
 module.exports = {
-    authMiddleware: authMiddleware
+    authMiddleWare: authMiddleWare
 }
