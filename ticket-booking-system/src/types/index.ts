@@ -22,6 +22,9 @@ export const bookingsSchema = z.object(({
     seats: z.number().int().positive("Seats must be at least 1"),
 }))
 
+export const walletSchema = z.object(({}))
+export const transactionSchema = z.object(({}))
+
 export type SignupSchema = z.infer<typeof signupSchema>;
 export type SigninSchema = z.infer<typeof signinSchema>;
 export type ShowSchema = z.infer<typeof showsSchema>;

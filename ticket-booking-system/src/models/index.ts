@@ -31,12 +31,12 @@ const userSchema = new mongoose.Schema({
     },
 }, { timestamps: true });
 const showSchema = new mongoose.Schema({
-    moviename: {
+    movieName: {
         type: String,
         required: true,
         unique: true,
     },
-    showtime: {
+    showTime: {
         type: String,
         required: true,
         unique: true,
@@ -83,6 +83,14 @@ const bookingSchema = new mongoose.Schema({
         toObject: { getters: true },
         timestamps: true
 });
+
+export const walletSchema = new mongoose.Schema({
+
+})
+
+export const transactionSchema = new mongoose.Schema({
+    
+})
 
 
 const UserModel = mongoose.model("UserModel", userSchema);

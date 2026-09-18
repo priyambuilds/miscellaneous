@@ -37,6 +37,8 @@ export const authMiddleWare = (req: Request, res: Response, next: NextFunction) 
         const decoded = jwt.verify(token, jwtSecret) as JwtPayload
         req.userId = decoded.userId;
         req.role = decoded.role;
+        
+        next();
     } catch (e) {
         res.status(400).json({
             success: false,
