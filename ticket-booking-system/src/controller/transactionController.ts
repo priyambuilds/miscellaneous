@@ -14,6 +14,7 @@ export async function getTransactionController (req: Request, res: Response) {
                     data: []
                 })
             }
+            
             return res.status(200).json({
                 success: true,
                 message: "Below are all your transactions",

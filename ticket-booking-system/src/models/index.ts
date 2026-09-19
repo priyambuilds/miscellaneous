@@ -76,11 +76,6 @@ const bookingSchema = new mongoose.Schema({
         required: true,
        
     },
-    idempotencyKey: {
-        type: String,
-        required: true,
-        unique: true
-    }
 }, {
         timestamps: true
 });
@@ -98,11 +93,6 @@ export const walletSchema = new mongoose.Schema({
         default: 0,
         min: 0,
     },
-    idempotencyKey: {
-        type: String,
-        required: true,
-        unique: true
-    }
 }, {
     timestamps: true
 })
@@ -138,11 +128,6 @@ export const transactionSchema = new mongoose.Schema({
     bookingId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "BookingModel",
-    },
-    idempotencyKey: {
-        type: String,
-        required: true,
-        unique: true
     },
     status: {
         type: String,

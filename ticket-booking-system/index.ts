@@ -4,6 +4,8 @@ import showRouter from "./src/routes/showRouter";
 import bookingRouter from "./src/routes/bookingsRouter";
 import walletRouter from "./src/routes/walletRouter";
 import transactionRouter from "./src/routes/transactionRouter";
+
+const port = process.env.PORT;
 const app = express();
 app.use(express.json());
 
@@ -14,4 +16,4 @@ app.use("/api/v1/bookings", bookingRouter);
 app.use("/api/v1/wallet", walletRouter);
 app.use("/api/v1/transaction", transactionRouter);
 
-app.listen(3000);
+app.listen(port);

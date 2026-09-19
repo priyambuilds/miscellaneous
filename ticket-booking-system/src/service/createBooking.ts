@@ -5,24 +5,15 @@ import {
   TransactionModel,
   WalletModel,
 } from "../models";
-import { toCents } from "../helpers/cents";
+
 export async function createBooking(
   userId: string,
   showId: string,
   seats: number,
-  idempotencyKey: string,
 ) {
   const session = await mongoose.startSession();
   try {
     return await session.withTransaction(async () => {
-      const existingTransaction = await TransactionModel.findOne({
-        idempotencyKey,
-      }).session(session);
-
-      if (existingTransaction) {
-        throw new Error("BOOKING ALREADY PROCESSED");
-      }
-
       const show = await ShowModel.findOneAndUpdate(
         {
           _id: showId,
@@ -72,7 +63,6 @@ export async function createBooking(
             showId,
             seats,
             totalAmountInCents: totalPrice,
-            idempotencyKey,
           },
         ],
         { session },
@@ -92,7 +82,6 @@ export async function createBooking(
             walletAmountBeforeInCents: wallet.amountInCents,
             walletAmountAfterInCents: wallet.amountInCents - totalPrice,
             bookingId: createdBooking._id,
-            idempotencyKey,
             status: "completed",
           },
         ],

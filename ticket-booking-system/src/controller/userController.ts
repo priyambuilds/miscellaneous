@@ -19,17 +19,19 @@ export async function signupController(req: Request, res: Response) {
     }
     const { username, email, password, role } = parsedData.data;
     const userExists = await UserModel.findOne({ username });
-    if (!userExists) {
+    if (userExists) {
         return res.status(400).json({
             success: false,
-            message: "no user with this username userExists",
+            message: "User with this username or email already exists",
             data: []
         })
     }
+    const passwordHash = await Bun.password.hash(password)
+
     const newUser = await UserModel.create({
         username,
         email,
-        password,
+        password: passwordHash,
         role
     })
     res.status(200).json({
@@ -57,10 +59,22 @@ export async function signInController(req: Request, res: Response) {
             data: []
         })
     }
+
+    const matchPassword = await Bun.password.verify(password, userExists.password)
+
+    if (!matchPassword) {
+        return res.status(400).json({
+            success: false,
+            message: "Invalid username or password",
+            data: []
+        })
+    }
+
     const token = jwt.sign({
         userId: userExists.id,
         role: userExists.role
     }, jwtSecret as string);
+    
     res.json({
         success: true,
         message: "signed in",

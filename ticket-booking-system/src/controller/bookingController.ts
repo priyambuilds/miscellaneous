@@ -35,8 +35,7 @@ export async function bookShowController(req: Request, res: Response) {
         const booking = await createBooking(
             userId,
             showId,
-            seats,
-            req.headers["idempotency-key"] as string
+            seats
         )
         return res.status(200).json({
             success: true,

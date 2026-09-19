@@ -13,6 +13,7 @@ export async function addWalletController(req: Request, res: Response) {
                 data: []
             })
         }
+
         const userId = req.userId
         let { amountInCents } = parsedData.data
         amountInCents = toCents(amountInCents);
@@ -20,7 +21,6 @@ export async function addWalletController(req: Request, res: Response) {
         const addAmount = await addAmountToWallet(
             userId,
             amountInCents,
-            req.headers["idempotency-key"] as string
         )
         return res.status(200).json({
             success: true,
