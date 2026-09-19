@@ -20,12 +20,20 @@ export async function getTransactionController (req: Request, res: Response) {
                 message: "Below are all your transactions",
                 data: [{transactions}]
             })
-        } else {
+        }
+        
+        if (role === "admin") {
             const transactions = await TransactionModel.find({});
              return res.status(200).json({
                 success: true,
                 message: "Below are all the transactions",
                 data: [{transactions}]
+            })
+        } else {
+            return res.status(400).json({
+                success: false,
+                message: "forbitted",
+                data: []
             })
         }
     } catch {

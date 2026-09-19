@@ -39,13 +39,11 @@ const showSchema = new mongoose.Schema({
     showTime: {
         type: String,
         required: true,
-        unique: true,
     },
     ticketPriceInCents: {
         type: Number,
         min: 0,
         required: true,
-        unique: true,
     },
     availableTickets: {
         type: Number,

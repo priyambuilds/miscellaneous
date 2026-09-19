@@ -14,7 +14,7 @@ export const signinSchema = z.object(({
 export const showsSchema = z.object(({
     movieName:z.string().trim().min(1, "Movie name is required").max(255, "Movie name should be shorter than 255 chars"),
     showTime:z.string().trim(),
-    ticketPriceInCents:z.number().positive("Ticket price must be a +ve value"),
+    ticketPriceInCents:z.number().int().positive("Ticket price must be a +ve value"),
     availableTickets:z.number().int().positive("Tickets must be a +ve integer")
 }))
 export const bookingsSchema = z.object(({
@@ -23,7 +23,7 @@ export const bookingsSchema = z.object(({
 }))
 
 export const walletSchema = z.object(({
-    amountInCents: z.number().nonnegative()
+    amountInCents: z.number().int().positive()
 }))
 
 export type SignupSchema = z.infer<typeof signupSchema>;

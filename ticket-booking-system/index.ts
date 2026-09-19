@@ -5,7 +5,7 @@ import bookingRouter from "./src/routes/bookingsRouter";
 import walletRouter from "./src/routes/walletRouter";
 import transactionRouter from "./src/routes/transactionRouter";
 
-const port = process.env.PORT;
+const port = Number(process.env.PORT);
 const app = express();
 app.use(express.json());
 

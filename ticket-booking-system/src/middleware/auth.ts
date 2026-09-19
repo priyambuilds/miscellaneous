@@ -35,8 +35,16 @@ export const authMiddleWare = (req: Request, res: Response, next: NextFunction) 
     }
     try {
         const decoded = jwt.verify(token, jwtSecret) as JwtPayload
-        req.userId = decoded.userId;
-        req.role = decoded.role;
+        if (decoded.userId && decoded.role) {
+            req.userId = decoded.userId;
+            req.role = decoded.role;
+        } else {
+            return res.status(400).json({
+                success: false,
+                message: "Malformend token",
+                data: []
+            })
+        }
         
         next();
     } catch (e) {

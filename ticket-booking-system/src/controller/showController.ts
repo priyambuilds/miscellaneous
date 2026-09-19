@@ -27,7 +27,7 @@ export async function createShowController(req: Request, res: Response) {
 
         const showExists = await ShowModel.findOne({ movieName });
         
-        if (!showExists) {
+        if (showExists) {
             return res.status(400).json({
                 success: false,
                 message: "Show already exists",
@@ -60,13 +60,13 @@ export async function createShowController(req: Request, res: Response) {
 export async function findShowController(req: Request, res: Response) {
     const show = await ShowModel.find({})
     try {
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message: "Below are all the shows in the cinema",
             data: [{ show }]
         })
     } catch {
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: "internal server error",
             data: []
@@ -75,20 +75,20 @@ export async function findShowController(req: Request, res: Response) {
 }
 export async function findShowByIdController(req: Request, res: Response) {
     try {
-        const showId = ShowModel.findById(req.params.showId)
+        const showId = await ShowModel.findById(req.params.showId)
         if (!showId) {
-            res.status(400).json({
+            return res.status(400).json({
                 success: false,
                 message: "No such show exists",
             });
         }
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message: "Below are all the shows in the cinema",
             data: [{ showId }]
         })
     } catch {
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: "internal server error",
         });

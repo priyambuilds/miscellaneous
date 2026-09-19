@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import { TransactionModel, WalletModel } from "../models";
-import { toCents } from '../helpers/cents';
 
 export async function addAmountToWallet(
     userId: string,
