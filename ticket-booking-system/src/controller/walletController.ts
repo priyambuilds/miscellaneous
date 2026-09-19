@@ -1,8 +1,7 @@
 import { type Request, type Response } from 'express';
 import { WalletModel } from '../models';
 import { walletSchema } from '../types';
-import { addAmount } from '../service/walletService';
-import { toCents } from '../helpers/cents';
+import { addAmountToWallet } from '../service/walletService';
 export async function addWalletController(req: Request, res: Response) {
     try {
         const parsedData = walletSchema.safeParse(req.body);
@@ -15,8 +14,12 @@ export async function addWalletController(req: Request, res: Response) {
         }
         const userId = req.userId
         const { amountInCents } = parsedData.data
-        const amount = toCents(amountInCents);
-        const addAmount = await addAmount(userId, amount)
+
+        const addAmount = await addAmountToWallet(
+            userId,
+            amountInCents,
+            req.headers["idempotency-key"] as string
+        )
         return res.status(200).json({
             success: true,
             message: "Amount added to the wallet successfully",

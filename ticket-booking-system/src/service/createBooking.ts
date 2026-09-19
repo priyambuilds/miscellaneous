@@ -5,6 +5,7 @@ import {
   TransactionModel,
   WalletModel,
 } from "../models";
+import { toCents } from "../helpers/cents";
 export async function createBooking(
   userId: string,
   showId: string,
@@ -13,7 +14,7 @@ export async function createBooking(
 ) {
   const session = await mongoose.startSession();
   try {
-    const booking = await session.withTransaction(async () => {
+    return await session.withTransaction(async () => {
       const existingTransaction = await TransactionModel.findOne({
         idempotencyKey,
       }).session(session);
@@ -41,7 +42,7 @@ export async function createBooking(
         throw new Error("NOT ENOUGH Tickets");
       }
 
-      const totalPrice = show.ticketPriceInCents * seats;
+      const totalPrice = toCents(show.ticketPriceInCents * seats);
 
       const wallet = await WalletModel.findOneAndUpdate(
         {
@@ -70,7 +71,7 @@ export async function createBooking(
             userId,
             showId,
             seats,
-            totalAmount: totalPrice,
+            totalAmountInCents: totalPrice,
             idempotencyKey,
           },
         ],
@@ -87,9 +88,9 @@ export async function createBooking(
           {
             userId,
             type: "booking",
-            amount: totalPrice,
-            walletAmountBefore: wallet.amountInCents,
-            walletAmountAfter: wallet.amountInCents - totalPrice,
+            amountInCents: totalPrice,
+            walletAmountBeforeInCents: wallet.amountInCents,
+            walletAmountAfterInCents: wallet.amountInCents - totalPrice,
             bookingId: createdBooking._id,
             idempotencyKey,
             status: "completed",
@@ -100,7 +101,6 @@ export async function createBooking(
 
       return createdBooking;
     });
-    return booking;
   } finally {
     await session.endSession();
   }

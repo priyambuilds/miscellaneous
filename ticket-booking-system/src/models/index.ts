@@ -89,8 +89,7 @@ export const walletSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "UserModel",
-        required: true,
-        unique: true
+        required: true
     },
     amountInCents: {
         type: Number,
@@ -98,6 +97,11 @@ export const walletSchema = new mongoose.Schema({
         default: 0,
         min: 0,
     },
+    idempotencyKey: {
+        type: String,
+        required: true,
+        unique: true
+    }
 }, {
     timestamps: true
 })
