@@ -42,16 +42,16 @@ export async function createBooking(
         throw new Error("NOT ENOUGH Tickets");
       }
 
-      const totalPrice = toCents(show.ticketPriceInCents * seats);
+      const totalPrice = show.ticketPriceInCents * seats;
 
       const wallet = await WalletModel.findOneAndUpdate(
         {
           userId,
-          amount: { $gte: totalPrice },
+          amountInCents: { $gte: totalPrice },
         },
         {
           $inc: {
-            amount: -totalPrice,
+            amountInCents: -totalPrice,
           },
         },
         {

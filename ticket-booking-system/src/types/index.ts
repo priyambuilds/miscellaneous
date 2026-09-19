@@ -23,7 +23,7 @@ export const bookingsSchema = z.object(({
 }))
 
 export const walletSchema = z.object(({
-    amountInCents: z.number().nonnegative().max(9999999.99, "Amount is too large").multipleOf(0.01, "Amount cannot have more than 2 decimal places")
+    amountInCents: z.number().nonnegative()
 }))
 
 export type SignupSchema = z.infer<typeof signupSchema>;

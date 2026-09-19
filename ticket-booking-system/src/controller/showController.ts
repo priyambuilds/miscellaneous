@@ -12,7 +12,6 @@ export async function createShowController(req: Request, res: Response) {
             data: []
         })
     }
-    const userId = req.userId;
     const role = req.role;
 
     if (role !== "admin") {
@@ -26,7 +25,7 @@ export async function createShowController(req: Request, res: Response) {
     try {
         const { movieName, showTime, ticketPriceInCents, availableTickets } = parsedData.data;
 
-        const showExists = ShowModel.findOne({ movieName });
+        const showExists = await ShowModel.findOne({ movieName });
         
         if (!showExists) {
             return res.status(400).json({
@@ -59,7 +58,7 @@ export async function createShowController(req: Request, res: Response) {
 }
 
 export async function findShowController(req: Request, res: Response) {
-    const show = ShowModel.find({})
+    const show = await ShowModel.find({})
     try {
         res.status(200).json({
             success: true,
@@ -70,6 +69,7 @@ export async function findShowController(req: Request, res: Response) {
         res.status(500).json({
             success: false,
             message: "internal server error",
+            data: []
         });
     }
 }

@@ -53,7 +53,7 @@ export async function bookShowController(req: Request, res: Response) {
 }
 export async function findBookingController(req: Request, res: Response) {
     const userId = req.userId;
-    const booking = BookingModel.findById(userId);
+    const booking = await BookingModel.find({userId});
     if (!booking) {
         return res.status(400).json({
             success: false,

@@ -6,7 +6,7 @@ export async function getTransactionController (req: Request, res: Response) {
 
     try {
         if (role === "user") {
-            const transactions = await TransactionModel.findById(userId);
+            const transactions = await TransactionModel.findOne({userId});
             if (!transactions) {
                 return res.status(400).json({
                     success: false,

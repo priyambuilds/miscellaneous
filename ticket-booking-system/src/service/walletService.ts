@@ -19,13 +19,12 @@ export async function addAmountToWallet(
                 return existingTransaction
             }
 
-            const amount = toCents(amountInCents);
 
             const wallet = await WalletModel.findOneAndUpdate(
                 { userId },
                 {
                     $inc: {
-                        amount
+                        amountInCents
                     }
                 },
                 {
@@ -36,7 +35,7 @@ export async function addAmountToWallet(
             );
 
             const walletAmountBeforeInCents = wallet?.amountInCents ?? 0;
-            const walletAmountAfterInCents = walletAmountBeforeInCents + amount
+            const walletAmountAfterInCents = walletAmountBeforeInCents + amountInCents
 
             const transaction = await TransactionModel.create([{
                 userId,

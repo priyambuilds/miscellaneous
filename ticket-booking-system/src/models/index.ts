@@ -89,6 +89,7 @@ export const walletSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "UserModel",
+        unique: true,
         required: true
     },
     amountInCents: {

@@ -2,6 +2,7 @@ import { type Request, type Response } from 'express';
 import { WalletModel } from '../models';
 import { walletSchema } from '../types';
 import { addAmountToWallet } from '../service/walletService';
+import { toCents } from '../helpers/cents';
 export async function addWalletController(req: Request, res: Response) {
     try {
         const parsedData = walletSchema.safeParse(req.body);
@@ -13,7 +14,8 @@ export async function addWalletController(req: Request, res: Response) {
             })
         }
         const userId = req.userId
-        const { amountInCents } = parsedData.data
+        let { amountInCents } = parsedData.data
+        amountInCents = toCents(amountInCents);
 
         const addAmount = await addAmountToWallet(
             userId,
@@ -36,7 +38,7 @@ export async function addWalletController(req: Request, res: Response) {
 }
 export async function getWalletController(req: Request, res: Response) {
     const userId = req.userId
-    const wallet = WalletModel.findById(userId)
+    const wallet = await WalletModel.findOne({userId})
      if (!wallet) {
         return res.status(400).json({
             success: false,
