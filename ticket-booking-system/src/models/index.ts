@@ -41,11 +41,11 @@ const showSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
-    ticketPrice: {
-        type: mongoose.Schema.Types.Decimal128,
+    ticketPriceInCents: {
+        type: Number,
+        min: 0,
         required: true,
         unique: true,
-        get: (a: mongoose.Schema.Types.Decimal128 | null) => a != null ? parseFloat(a.toString()): a
     },
     availableTickets: {
         type: Number,
@@ -53,8 +53,6 @@ const showSchema = new mongoose.Schema({
     },
 },
     {
-        toJSON: { getters: true },
-        toObject: { getters: true },
         timestamps: true
 });
 const bookingSchema = new mongoose.Schema({
@@ -73,28 +71,88 @@ const bookingSchema = new mongoose.Schema({
         required: true,
         min: 1
     },
-    totalAmount: {
-        type: mongoose.Schema.Types.Decimal128,
+    totalAmountInCents: {
+        type: Number,
         required: true,
-        get: (a: mongoose.Schema.Types.Decimal128 | null) => a != null ? parseFloat(a.toString()): a
+       
+    },
+    idempotencyKey: {
+        type: String,
+        required: true,
+        unique: true
     }
 }, {
-        toJSON: { getters: true },
-        toObject: { getters: true },
         timestamps: true
 });
 
 export const walletSchema = new mongoose.Schema({
-
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "UserModel",
+        required: true,
+        unique: true
+    },
+    amountInCents: {
+        type: Number,
+        required: true,
+        default: 0,
+        min: 0,
+    },
+}, {
+    timestamps: true
 })
 
 export const transactionSchema = new mongoose.Schema({
-    
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "UserModel",
+        required: true,
+    },
+    type: {
+        type: String,
+        required: true,
+        enum: ["topup", "booking"]
+    },
+    amountInCents: {
+        type: Number,
+        required: true,
+        min: 0
+    },
+    walletAmountBeforeInCents: {
+        type: Number,
+        required: true,
+        default: 0,
+        min: 0,
+    },
+    walletAmountAfterInCents: {
+        type: Number,
+        required: true,
+        default: 0,
+        min: 0,
+    },
+    bookingId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "BookingModel",
+    },
+    idempotencyKey: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    status: {
+        type: String,
+        required: true,
+        enum: ["failed", "completed"]
+    },
+}, {
+    timestamps: true
 })
 
 
 const UserModel = mongoose.model("UserModel", userSchema);
 const ShowModel = mongoose.model("ShowModel", showSchema);
 const BookingModel = mongoose.model("BookingModel", bookingSchema);
+const WalletModel = mongoose.model("WalletModel", walletSchema);
+const TransactionModel = mongoose.model("TransactionModel", transactionSchema);
 
-export {UserModel, ShowModel, BookingModel};
+export {UserModel, ShowModel, BookingModel, WalletModel, TransactionModel};

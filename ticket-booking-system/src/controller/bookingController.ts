@@ -1,6 +1,7 @@
 import {type Request, type Response} from "express";
-import { bookingsSchema, showsSchema } from "../types";
-import { ShowModel } from "../models";
+import { bookingsSchema} from "../types";
+import { BookingModel, ShowModel } from "../models";
+import { createBooking } from "../service/createBooking";
 
 export async function bookShowController(req: Request, res: Response) {
     const parsedData = bookingsSchema.safeParse(req.body);
@@ -13,10 +14,10 @@ export async function bookShowController(req: Request, res: Response) {
     }
     const userId = req.userId;
     const role = req.role;
-    if (role !== "admin") {
+    if (role !== "user") {
         return res.status(400).json({
             success: false,
-            message: "You are not an admin",
+            message: "Admins cannot book tickets",
             data: []
         });
     }
@@ -30,14 +31,39 @@ export async function bookShowController(req: Request, res: Response) {
             message: "No such show exists"
         })
     }
-    if (show.availableTickets < seats) {
+    try {
+        const booking = await createBooking(
+            userId,
+            showId,
+            seats,
+            req.headers["idempotency-key"] as string
+        )
+        return res.status(200).json({
+            success: true,
+            message: "Booking successful",
+            data: [{ booking }]
+        })
+    } catch (e) {
         return res.status(400).json({
             success: false,
-            message: "Not enough seats available"
+            message: "Server side error",
+            data: []
         })
     }
-
 }
 export async function findBookingController(req: Request, res: Response) {
-
+    const userId = req.userId;
+    const booking = BookingModel.findById(userId);
+    if (!booking) {
+        return res.status(400).json({
+            success: false,
+            message: "You have no bookings",
+            data: []
+        })
+    }
+    return res.status(200).json({
+        success: true,
+        message: "Below are your bookings",
+        data: [{booking}]
+    })
 }
