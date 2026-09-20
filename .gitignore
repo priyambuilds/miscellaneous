@@ -1,3 +1,4 @@
 /cmd pal test/src/lib
 node_modules
 package-lock.json
+web dev cohort/learning-prisma/migrations
