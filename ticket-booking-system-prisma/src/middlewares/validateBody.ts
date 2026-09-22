@@ -11,6 +11,7 @@ export function validateBody(schema: ZodObject<any>) {
                 data: []
             })
         }
+        req.body = result.data
         next()
     }
 }

@@ -15,7 +15,6 @@ export const showtimeIdParams = z.object({
 export const screenIdParams = z.object({
     cityId: z.uuid()
 })
-
 export const userSignupSchema = z.object({
     username: z.string().trim(),
     email: z.email(),
@@ -25,28 +24,35 @@ export const userSigninSchema = z.object({
     username: z.string().trim(),
     password: z.string().min(8, "Password must contain atleast 8 chars").max(100, "The passsword should be below a 100 chars")
 })
-export const createCityParamsSchema = z.object({
+export const createCitySchema = z.object({
     name: z.string().trim().min(3).max(30)
 })
-export const createTheatreParamsSchema = z.object({
+export const createTheatreSchema = z.object({
     cityId: z.uuid(),
     name: z.string().trim().min(3).max(30)
 })
-export const createMovieParamsSchema = z.object({
+export const createMovieSchema = z.object({
     name: z.string().trim().min(3).max(30)
 })
-export const createScreenParamsSchema = z.object({
+export const createScreenSchema = z.object({
     theatreId: z.uuid(),
     number: z.int().positive()
 })
-export const createSeatParamsSchema = z.object({
+export const createSeatSchema = z.object({
     screenId: z.uuid(),
     number: z.int().positive()
 })
-export const createShowTimeParamsSchema = z.object({
+export const createShowTimeSchema = z.object({
     screenId: z.uuid(),
     movieId: z.uuid(),
     startsAt: z.coerce.date(),
     endsAt: z.coerce.date(),
     priceCents: z.int().nonnegative()
+})
+
+
+export const bookingSchema = z.object({
+    userId: z.uuid(),
+    showtimeId: z.uuid(),
+    status: z.string().trim()
 })

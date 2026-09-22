@@ -3,7 +3,7 @@ import { createCitiesService } from "./services/adminService";
 
 export async function createCitiesController(req: Request, res: Response, next: NextFunction) {
     try {
-        const cities = await createCitiesService(req.body)
+        const cities = await createCitiesService()
     } catch (e) {
         next(e)
     }

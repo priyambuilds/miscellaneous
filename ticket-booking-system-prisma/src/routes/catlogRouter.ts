@@ -1,6 +1,6 @@
 import express from "express";
 import { isAdminMiddleware } from "../middlewares/requireAdmin";
-import { validateParams } from "../middlewares/validateBody";
+import { validateParams } from "../middlewares/validateParams";
 import { cityIdParams, screenIdParams, showtimeIdParams, theatreIdParams } from "../types";
 
 const adminRouter = express.Router();

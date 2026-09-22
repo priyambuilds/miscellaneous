@@ -1,5 +1,5 @@
-import type { Request, Response, NextFunction } from "express";
-import type { ZodObject } from "zod";
+import type { Request, Response, NextFunction } from "express"
+import type { ZodObject } from "zod"
 
 export function validateParams(schema: ZodObject<any>) {
     return (req: Request, res: Response, next: NextFunction) => {
@@ -8,9 +8,10 @@ export function validateParams(schema: ZodObject<any>) {
             return res.status(400).json({
                 success: false,
                 message: ["Invalid query params", result.error],
-                data: []
+                data: [],
             })
         }
+        req.params = result.data as typeof req.params
         next()
     }
 }
