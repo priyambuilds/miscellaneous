@@ -1,0 +1,183 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum TransactionStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum TransactionType {
+  TOP_UP
+  BOOKING
+  REFUND
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  REFUNDED
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+// A User can create many bookings and can have many transactions over time.
+model User {
+  id                 String   @id @default(uuid())
+  username           String   @unique
+  email              String   @unique
+  password           String
+  role               UserRole @default(USER)
+  walletBalanceCents Int      @default(0)
+
+  bookings    Booking[]
+  transaction Transaction[]
+}
+
+// A City can contain many theatres. Each Theatre belongs to one City.
+model City {
+  id      String    @id @default(uuid())
+  name    String    @unique
+  theatre Theatre[]
+}
+
+// A Theatre belongs to one City and can contain many Screens
+// @@unique([cityId, name]) allows for the same named theatres to exist in multiple cities, but prevent duplicates in the same city
+model Theatre {
+  id     String @id @default(uuid())
+  name   String
+  cityId String
+
+  city    City     @relation(fields: [cityId], references: [id])
+  screens Screen[]
+
+  @@unique([cityId, name])
+}
+
+// A Screen belongs to one Theatre, has many Seats, and hosts many ShowTimes.
+// Screen number is unique for each Theatre, different theatres can have the same Screen numbers
+model Screen {
+  id        String @id @default(uuid())
+  number    Int
+  theatreId String
+
+  theatre   Theatre     @relation(fields: [theatreId], references: [id])
+  seats     Seats[]
+  showTimes ShowTimes[]
+
+  @@unique([theatreId, number])
+}
+
+// A Seat belongs to one Screen and can appear in many BookedSeats records over time. 
+// The same seat can be booked for different ShowTimes, but not twice for the same ShowTime, that rule is enforced on BookedSeats.
+// Seat number is unique only within its Screen.
+model Seats {
+  id       String @id @default(uuid())
+  number   Int
+  screenId String
+
+  screen      Screen        @relation(fields: [screenId], references: [id])
+  bookedSeats BookedSeats[]
+
+  @@unique([screenId, number])
+  @@unique([id, screenId])
+}
+
+// A Movie can have many ShowTimes
+model Movie {
+  id   String @id @default(uuid())
+  name String
+
+  showTimes ShowTimes[]
+}
+
+// A ShowTimes record represents one scheduled showing of one Movie on one Screen. 
+// It can have many Bookings and many BookedSeats records.
+model ShowTimes {
+  id         String   @id @default(uuid())
+  screenId   String
+  movieId    String
+  startsAt   DateTime
+  endsAt     DateTime
+  priceCents Int
+
+  screen      Screen        @relation(fields: [screenId], references: [id])
+  movie       Movie         @relation(fields: [movieId], references: [id])
+  bookings    Booking[]
+  bookedSeats BookedSeats[]
+
+  createdAt DateTime @default(now())
+
+  @@unique([id, screenId])
+}
+
+// A Booking belongs to exactly one User and exactly one ShowTimes record.
+// One booking cannot point to multiple users or multiple showtimes.
+// A Booking can contain many BookedSeats because one customer may select many seats. 
+// It can also have many Transactions for payment attempts, booking
+// payments, or refunds over its lifetime.
+model Booking {
+  id         String        @id @default(uuid())
+  userId     String
+  showtimeId String
+  status     BookingStatus
+  totalCents Int
+
+  user        User          @relation(fields: [userId], references: [id])
+  showTime    ShowTimes     @relation(fields: [showtimeId], references: [id])
+  transaction Transaction[]
+  bookedSeats BookedSeats[]
+
+  createdAt DateTime @default(now())
+
+  @@unique([id, showtimeId])
+}
+
+// BookedSeats is the reservation/junction table for individual seats.
+// Each row means: "this seat is included in this booking for this showtime."
+// This table facilitates booking multiple seats for one Booking
+// @@unique([showtimeId, seatId]) prevents the same seat from being reserved
+// twice for the same showtime, while still allowing it to be reserved for a
+// different showtime.
+model BookedSeats {
+  id         String @id @default(uuid())
+  bookingId  String
+  seatId     String
+  showtimeId String
+  screenId   String
+
+  booking  Booking   @relation(fields: [bookingId, showtimeId], references: [id, showtimeId])
+  seat     Seats     @relation(fields: [seatId, screenId], references: [id, screenId])
+  showTime ShowTimes @relation(fields: [showtimeId, screenId], references: [id, screenId])
+
+  @@unique([showtimeId, seatId])
+}
+
+// A Transaction belongs to exactly one User because userId is one required foreign-key value. A User can therefore have many Transactions.
+// bookingId is optional because some transactions, such as wallet top-ups, are not related to a booking. 
+model Transaction {
+  id                String            @id @default(uuid())
+  bookingId         String?
+  userId            String
+  type              TransactionType
+  amountCents       Int
+  amountBeforeCents Int
+  amountAfterCents  Int
+  status            TransactionStatus
+
+  user    User     @relation(fields: [userId], references: [id])
+  booking Booking? @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+  @@index([userId])
+}
