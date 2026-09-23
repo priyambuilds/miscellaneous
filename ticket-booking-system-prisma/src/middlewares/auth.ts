@@ -4,7 +4,7 @@ import jwt, { type JwtPayload } from "jsonwebtoken"
 declare global {
     namespace Express {
         interface Request {
-            userId: string,
+            userId: string
             role: string
         }
     }
@@ -30,7 +30,7 @@ export async function authMiddleWare(req: Request, res: Response, next: NextFunc
         return res.status(400).json({
             succes: false,
             message: "Malformed token",
-            data: []
+            data: [],
         })
     }
 
@@ -44,13 +44,13 @@ export async function authMiddleWare(req: Request, res: Response, next: NextFunc
             })
         }
 
-        req.userId = decoded.userId,
-            req.role = decoded.role
-        
+        req.userId = decoded.userId
+        req.role = decoded.role
+
         res.status(200).json({
             result: true,
             message: "Below is your token",
-            data: [{token}]
+            data: [{ token }],
         })
         next()
     } catch {

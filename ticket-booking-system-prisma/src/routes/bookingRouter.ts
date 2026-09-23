@@ -2,9 +2,10 @@ import express from "express";
 import { authMiddleWare } from "../middlewares/auth";
 import { bookingController, getBookingsController } from "../controller/bookingController";
 import { validateBody } from "../middlewares/validateBody";
-import { bookingSchema } from "../types";
+import { bookingSchema, showtimeIdParams } from "../types";
+import { validateParams } from "../middlewares/validateParams";
 
-const bookingRouter = express.Router();
+export const bookingRouter = express.Router();
 
-bookingRouter.post("/", authMiddleWare, validateBody(bookingSchema),bookingController)
+bookingRouter.post("/showtimes/:showtimeId/bookings", authMiddleWare, validateParams(showtimeIdParams), validateBody(bookingSchema), bookingController)
 bookingRouter.get("/", authMiddleWare, getBookingsController)

@@ -1,24 +1,31 @@
-import express from "express";
-import { isAdminMiddleware } from "../middlewares/requireAdmin";
-import { validateParams } from "../middlewares/validateParams";
-import { cityIdParams, screenIdParams, showtimeIdParams, theatreIdParams } from "../types";
+import express from "express"
+import { validateParams } from "../middlewares/validateParams"
+import { cityIdParams, screenIdParams, showtimeIdParams, theatreIdParams } from "../types"
+import {
+    getCitiesController,
+    getScreensByTheatreController,
+    getSeatsByScreenController,
+    getShowtimeController,
+    getShowtimesByCityController,
+    getShowtimesByTheatreController,
+    getTheatresByCityController,
+} from "../controller/catlogController"
 
-const adminRouter = express.Router();
-adminRouter.use(isAdminMiddleware);
+export const catlogRouter = express.Router()
 
 // get cities
-adminRouter.get("/city")
+catlogRouter.get("/cities", getCitiesController)
 // get theatres inside a city
-adminRouter.get("/city/:cityId/theatre", validateParams(cityIdParams))
+catlogRouter.get("/cities/:cityId/theatres", validateParams(cityIdParams), getTheatresByCityController)
 // get all shows inside a city
-adminRouter.post("city/:city/showtimes", validateParams(cityIdParams))
+catlogRouter.get("/cities/:cityId/showtimes", validateParams(cityIdParams), getShowtimesByCityController)
 // get all shows inside that particular theatre
-adminRouter.post("theatre/:theatreId/showtimes", validateParams(theatreIdParams))
+catlogRouter.get("/theatres/:theatreId/showtimes", validateParams(theatreIdParams), getShowtimesByTheatreController)
 // get all details of a particular show
-adminRouter.post("/showtimes/:showtimeId", validateParams(showtimeIdParams))
+catlogRouter.get("/showtimes/:showtimeId", validateParams(showtimeIdParams), getShowtimeController)
 // get screens inside a theatre
-adminRouter.get("/theatre/:theatreId/screens", validateParams(theatreIdParams))
+catlogRouter.get("/theatres/:theatreId/screens", validateParams(theatreIdParams), getScreensByTheatreController)
 // get seats inside a screen
-adminRouter.get("/screens/:screenId/seats", validateParams(screenIdParams))
-// Get user's personal transaction records
-adminRouter.get("/transactions")
+catlogRouter.get("/screens/:screenId/seats", validateParams(screenIdParams), getSeatsByScreenController)
+
+export default catlogRouter

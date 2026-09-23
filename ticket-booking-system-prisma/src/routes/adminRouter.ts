@@ -5,7 +5,7 @@ import { validateParams } from "../middlewares/validateParams";
 import { cityIdParams, createCitySchema, createMovieSchema, createScreenSchema, createSeatSchema, createShowTimeSchema, createTheatreSchema, movieIdParams, screenIdParams, showtimeIdParams, theatreIdParams } from "../types";
 import { createCitiesController, createMoviesController, createScreensController, createSeatsController, createShowTimeController, createTheatreController } from "../controller/adminController";
 
-const adminRouter = express.Router();
+export const adminRouter = express.Router();
 adminRouter.use(isAdminMiddleware);
 
 // Add cities

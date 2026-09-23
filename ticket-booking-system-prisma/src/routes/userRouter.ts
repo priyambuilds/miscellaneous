@@ -4,7 +4,7 @@ import { signInController, signUpController } from "../controller/userController
 import { validateBody } from "../middlewares/validateBody";
 import { userSignupSchema } from "../types";
 
-const userRouter = express.Router();
+export const userRouter = express.Router();
 
 userRouter.post("/signup", validateBody(userSignupSchema), signUpController)
 userRouter.post("/signin", validateBody(userSignupSchema), signInController)
