@@ -19,6 +19,7 @@ export async function signinService(username: string, password: string) {
         where: { username },
         orderBy: {username: "asc"}
     })
+    
     if (!user) return null
     const isPasswordValid = await Bun.password.verify(password, user.password)
     if (!isPasswordValid) return null

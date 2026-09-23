@@ -7,7 +7,7 @@ export function validateParams(schema: ZodObject<any>) {
         if (!result.success) {
             return res.status(400).json({
                 success: false,
-                message: ["Invalid query params", result.error],
+                message: ["Invalid query params", result.error.flatten()],
                 data: [],
             })
         }

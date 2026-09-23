@@ -28,6 +28,7 @@ export const userSignupSchema = z.object({
     role: UserRoleSchema.default("USER"),
     walletBalanceCents: z.int().nonnegative().default(0),
 })
+
 export const userSigninSchema = z.object({
     username: z.string().trim(),
     password: z
