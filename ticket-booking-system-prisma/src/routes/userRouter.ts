@@ -6,5 +6,5 @@ import { userSignupSchema } from "../types";
 
 const userRouter = express.Router();
 
-userRouter.post("/signup", authMiddleWare, validateBody(userSignupSchema), signUpController)
-userRouter.post("/signin", authMiddleWare, validateBody(userSignupSchema), signInController)
+userRouter.post("/signup", validateBody(userSignupSchema), signUpController)
+userRouter.post("/signin", validateBody(userSignupSchema), signInController)

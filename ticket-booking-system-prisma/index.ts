@@ -1,6 +1,7 @@
 import express from "express"
 import { notFound } from "./src/middlewares/notFound";
 import { errorHandler } from "./src/middlewares/errorHandler";
+import { databaseErrorHandler } from "./src/middlewares/dbErrorHandler";
 
 const port = Number(process.env.PORT)
 
@@ -15,6 +16,7 @@ app.use("/api/v4/wallet")
 app.use("/api/v4/transaction")
 
 app.use(notFound)
+app.use(databaseErrorHandler)
 app.use(errorHandler)
 
 app.listen(port)
