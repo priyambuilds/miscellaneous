@@ -1,14 +1,17 @@
 import { prisma } from "../../src/db";
+import { redis } from "../../src/redis";
 
 export async function resetDb() {
-    // Safety check. Never wipe a db that isnt clearly a test db
-    if (!process.env.DATABASE_URL?.includes("_test")) {
-        throw new Error("Refusing to reset: Database url is not a test db url")
-    }
+  if (!process.env.DATABASE_URL?.includes("_test")) {
+    throw new Error("Refusing to reset: DATABASE_URL is not a test database");
+  }
+  if (!process.env.REDIS_URL?.endsWith("/1")) {
+    throw new Error("Refusing to reset: REDIS_URL is not the test Redis database (/1)");
+  }
 
-    // Order matters
-    // The delete order is required by the foreign keys. Postgres refuses to delete a user while messages still point at them.
-    await prisma.message.deleteMany();
-    await prisma.room.deleteMany();
-    await prisma.user.deleteMany();
+  await prisma.message.deleteMany();
+  await prisma.room.deleteMany();
+  await prisma.user.deleteMany();
+
+  await redis.flushdb(); // wipes ONLY database 1, not the dev data in 0
 }

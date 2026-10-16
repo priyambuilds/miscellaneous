@@ -2,6 +2,8 @@ import { Elysia } from "elysia"
 import { prisma } from "../db"
 import { authPlugin } from "../auth/plugin"
 import { ClientMessage } from "../protocol"
+import { getOnline, markOffline, markOnline } from "../lib/presence"
+import { isRateLimited } from "../lib/rate-limit"
 
 type Member = {
   userId: number
@@ -9,6 +11,9 @@ type Member = {
   roomId: number
   room: string
 }
+
+const CHAT_LIMIT = 5
+const CHAT_WINDOW_SECONDS = 10
 
 export function createChatRoutes() {
   const members = new Map<string, Member>()
@@ -33,6 +38,11 @@ export function createChatRoutes() {
 
       switch (msg.type) {
         case "ping": {
+          // Heartbeat: if in a room, refresh "last seen"
+          const member = members.get(ws.id)
+          if (member) {
+            await markOnline(member.room, ws.id, member.username)
+          }
           ws.send(
             JSON.stringify({
               type: "pong",
@@ -64,47 +74,75 @@ export function createChatRoutes() {
                 },
               }),
             )
-            return;
+            return
           }
 
-          const { room } = msg.payload;
-          
+          const { room } = msg.payload
+
           try {
             const dbRoom = await prisma.room.upsert({
               where: { name: room },
               update: {},
-              create: {name: room}
+              create: { name: room },
             })
-            members.set(ws.id, {userId, username, roomId: dbRoom.id, room});
+            members.set(ws.id, { userId, username, roomId: dbRoom.id, room })
           } catch (err) {
-            console.error("[join] database error", err);
-            ws.send(JSON.stringify({
-              type: "error",
-              payload: {message: "Could not join room"}
-            }))
-            return;
+            console.error("[join] database error", err)
+            ws.send(
+              JSON.stringify({
+                type: "error",
+                payload: { message: "Could not join room" },
+              }),
+            )
+            return
           }
-          ws.subscribe(room);
-          ws.send(JSON.stringify({
-            type: "joined",
-            payload: {room, username}
-          }))
-          ws.publish(room, JSON.stringify({
-            type: "user_joined",
-            payload: {username}
-          }));
-          break;
+
+          // Was this user already here in another tab? (check before adding this conenction)
+          const wasOnline = (await getOnline(room)).includes(username)
+          await markOnline(room, ws.id, username)
+
+          ws.subscribe(room)
+          ws.send(
+            JSON.stringify({
+              type: "joined",
+              payload: { room, username },
+            }),
+          )
+          // Only announce if they werent already in the room
+          if (!wasOnline) {
+            ws.publish(
+              room,
+              JSON.stringify({
+                type: "user_joined",
+                payload: { username },
+              }),
+            )
+          }
+          break
         }
         case "chat": {
-          const me = members.get(ws.id);
+          const me = members.get(ws.id)
           if (!me) {
-            ws.send(JSON.stringify({
-              type: "error",
-              payload: {
-                message: "Join a room first"
-              }
-            }))
-            return;
+            ws.send(
+              JSON.stringify({
+                type: "error",
+                payload: {
+                  message: "Join a room first",
+                },
+              }),
+            )
+            return
+          }
+
+          // check the limit before touching the DB
+          if (await isRateLimited(`ratelimit:chat:${me.userId}`, CHAT_LIMIT, CHAT_WINDOW_SECONDS)) {
+            ws.send(
+              JSON.stringify({
+                type: "error",
+                payload: { message: "You are sending messages too fast" },
+              }),
+            )
+            return
           }
 
           const saved = await prisma.message
@@ -113,15 +151,17 @@ export function createChatRoutes() {
               console.error("[caht] databse error", err)
               return null
             })
-          
+
           if (!saved) {
-            ws.send(JSON.stringify({
-              type: "error",
-              payload: {
-                message: "Message not sent"
-              }
-            }))
-            return;
+            ws.send(
+              JSON.stringify({
+                type: "error",
+                payload: {
+                  message: "Message not sent",
+                },
+              }),
+            )
+            return
           }
 
           const out = JSON.stringify({
@@ -131,31 +171,37 @@ export function createChatRoutes() {
               from: me.username,
               text: saved.text,
               sentAt: saved.createdAt.getTime(),
-            }
-          });
+            },
+          })
 
-          ws.publish(me.room, out);
-          ws.send(out);
-          break;
+          ws.publish(me.room, out)
+          ws.send(out)
+          break
         }
       }
     },
 
-    close(ws) {
-      const member = members.get(ws.id);
-      if (!member) return;
-      members.delete(ws.id);
+    async close(ws) {
+      const member = members.get(ws.id)
+      if (!member) return
+      members.delete(ws.id)
 
-      // The closed websocket cannot publish so the server announces it
-      ws.data.server?.publish(
-        member.room,
-        JSON.stringify({
-          type: "user_left",
-          payload: {
-            username: member.username
-          }
-        })
-      )
-    }
-  });
+      await markOffline(member.room, ws.id, member.username)
+
+      // Only annount if this was their LAST connection in the room
+      const online = await getOnline(member.room)
+      if (!online.includes(member.username)) {
+        // The closed websocket cannot publish so the server announces it
+        ws.data.server?.publish(
+          member.room,
+          JSON.stringify({
+            type: "user_left",
+            payload: {
+              username: member.username,
+            },
+          }),
+        )
+      }
+    },
+  })
 }

@@ -32,7 +32,7 @@ export type ServerMessage =
   | { type: "welcome"; payload: { message: string } }
   | { type: "pong"; payload: { ts: number } }
   | { type: "echo"; payload: { text: number } }
-  | { type: "joined"; payload: { room: string; username: string } }
+  | { type: "joined"; payload: { room: string; username: string, online: string[] } }
   | { type: "user_joined"; payload: { username: string } }
   | { type: "user_left"; payload: { username: string } }
   | { type: "chat"; payload: { id: number, from: string; text: string; sentAt: number } }
