@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id       Int       @id @default(autoincrement())
+  username String    @unique
+  passwordHash String
+
+  createdAt DateTime @default(now())
+  message  Message[]
+}
+
+model Room {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  message   Message[]
+}
+
+model Message {
+  id     Int    @id @default(autoincrement())
+  text   String
+  userId Int
+  roomId Int
+
+  user User @relation(fields: [userId], references: [id])
+  room Room @relation(fields: [roomId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([roomId, id]) // this is for our history query, "messages in room x sorted by id". The order matters, first find the room then dort within it
+}
